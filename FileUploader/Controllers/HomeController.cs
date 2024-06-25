@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using FileUploader.Models;
+using ExcelDataReader;
+using System.Data;
 
 namespace FileUploader.Controllers;
 
@@ -27,6 +29,11 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    public IActionResult ExcelFileReader()
+    {
+        return View();
     }
 
     [HttpPost]
@@ -58,10 +65,61 @@ public class HomeController : Controller
         }
         catch (Exception ex)
         {
-            ViewData["ErrorMessage"] = $"Error uploading file: {ex.Message}";
+            ViewData["Error" +
+                "Message"] = $"Error uploading file: {ex.Message}";
             return View("Index");
         }
 
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ExcelFileReader(IFormFile file)
+    {
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        //upload file
+        if (file != null && file.Length > 0)
+        {
+            var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "ExcelUploads");
+
+            if (!Directory.Exists(uploadDirectory))
+            {
+                Directory.CreateDirectory(uploadDirectory);
+            }
+
+            var filePath = Path.Combine(uploadDirectory, file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            //Read file
+            using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                var excelData = new List<List<object>>();
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    do
+                    {
+                        while (reader.Read())
+                        {
+                            var Rowdata = new List<object>();
+
+                            for (int column = 0; column < reader.FieldCount; column++)
+                            {
+                                Rowdata.Add(reader.GetValue(column));
+                            }
+                            excelData.Add(Rowdata);
+                        }
+                    } while (reader.NextResult());
+
+                    ViewBag.ExcelData = excelData;
+                }
+            }
+
+        }
+
+        return View();
     }
 }
 

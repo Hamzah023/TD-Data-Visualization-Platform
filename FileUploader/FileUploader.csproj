@@ -4,14 +4,29 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>7c956f39-ebd1-4d56-ab72-53f205eff962</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <None Remove="uploads\" />
+    <None Remove="ExcelUploads\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="uploads\" />
+    <Folder Include="ExcelUploads\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Docker.DotNet" Version="3.125.15" />
+    <PackageReference Include="KubernetesClient" Version="14.0.2" />
+    <PackageReference Include="KubernetesClient.Models" Version="12.0.16" />
+    <PackageReference Include="KubernetesClient.Basic" Version="12.0.16" />
+    <PackageReference Include="Docker.Registry.DotNet" Version="1.2.1" />
+    <PackageReference Include="jQuery" Version="3.7.1" />
+    <PackageReference Include="jquery.datatables" Version="1.10.15" />
+    <PackageReference Include="ExcelDataReader" Version="3.7.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  fileuploader:
+    image: ${DOCKER_REGISTRY-}fileuploader
+    build:
+      context: .
+      dockerfile: FileUploader/Dockerfile
