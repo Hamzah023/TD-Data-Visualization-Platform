@@ -1,37 +1,63 @@
 ﻿<div class="text-center">
     <h1 class="display-4">Upload an Excel File</h1>
-    <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="ExcelFileReader">
+    <form id="uploadForm" enctype="multipart/form-data">
         <div class="form-group">
-            <input type="file" name="file" class="form-control" />
+            <input type="file" name="file" id="fileInput" class="form-control" />
         </div>
-        <button type="submit" class="btn btn-primary">Upload</button>
+        <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
     </form>
 
-    <table class="table">
+    <table class="table" id="excelTable">
         <thead>
-            <tr>
-                @if(ViewBag.ExcelData != null && ViewBag.ExcelData.Count > 0)
-                {
-                        @foreach(var header in ViewBag.ExcelData[0])
-                        {
-                            <th>@header</th>
-                        }
-                }
-            </tr>
+            <tr id="tableHeader"></tr>
         </thead>
-        <tbody>
-            @if (ViewBag.ExcelData != null && ViewBag.ExcelData.Count > 1)
-            {
-                    @for(int i=1; i<ViewBag.ExcelData.Count; i++)
-                    {
-                            <tr>
-                                @foreach(var cell in ViewBag.ExcelData[i])
-                                {
-                                    <td>@cell</td>
-                                }
-                            </tr>
-                    }
-            }
-        </tbody>
+        <tbody id="tableBody"></tbody>
     </table>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#uploadButton').click(function () {
+            var formData = new FormData();
+            var file = $('#fileInput')[0].files[0];
+            formData.append('file', file);
+
+            $.ajax({
+                url: '@Url.Action("ExcelFileReader", "Home")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.success) {
+                        $('#tableHeader').empty();
+                        $('#tableBody').empty();
+
+                        if (data.excelData && data.excelData.length > 0) {
+                            var headers = data.excelData[0];
+                            for (var i = 0; i < headers.length; i++) {
+                                $('#tableHeader').append('<th>' + headers[i] + '</th>');
+                            }
+
+                            for (var i = 1; i < data.excelData.length; i++) {
+                                var row = '<tr>';
+                                for (var j = 0; j < data.excelData[i].length; j++) {
+                                    row += '<td>' + data.excelData[i][j] + '</td>';
+                                }
+                                row += '</tr>';
+                                $('#tableBody').append(row);
+                            }
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert('An error occurred while uploading the file.');
+                }
+            });
+        });
+    });
+</script>

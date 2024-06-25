@@ -56,8 +56,8 @@ public class HomeController : Controller
 
             var fileContents = await System.IO.File.ReadAllTextAsync(filePath);
 
-            
-            
+
+
             ViewData["SuccessMessage"] = "File uploaded successfully!";
             ViewData["FileContents"] = fileContents;
 
@@ -69,57 +69,61 @@ public class HomeController : Controller
                 "Message"] = $"Error uploading file: {ex.Message}";
             return View("Index");
         }
-
     }
+
 
     [HttpPost]
     public async Task<IActionResult> ExcelFileReader(IFormFile file)
     {
         System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-        //upload file
-        if (file != null && file.Length > 0)
+
+        if (file == null || file.Length == 0)
         {
-            var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "ExcelUploads");
+            return Json(new { success = false, message = "Please select a file to upload." });
+        }
 
-            if (!Directory.Exists(uploadDirectory))
-            {
-                Directory.CreateDirectory(uploadDirectory);
-            }
+        var uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "ExcelUploads");
 
-            var filePath = Path.Combine(uploadDirectory, file.FileName);
+        if (!Directory.Exists(uploadDirectory))
+        {
+            Directory.CreateDirectory(uploadDirectory);
+        }
 
+        var filePath = Path.Combine(uploadDirectory, file.FileName);
+
+        try
+        {
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            //Read file
+            var excelData = new List<List<object>>();
             using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
-                var excelData = new List<List<object>>();
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     do
                     {
                         while (reader.Read())
                         {
-                            var Rowdata = new List<object>();
+                            var rowData = new List<object>();
 
                             for (int column = 0; column < reader.FieldCount; column++)
                             {
-                                Rowdata.Add(reader.GetValue(column));
+                                rowData.Add(reader.GetValue(column));
                             }
-                            excelData.Add(Rowdata);
+                            excelData.Add(rowData);
                         }
                     } while (reader.NextResult());
-
-                    ViewBag.ExcelData = excelData;
                 }
             }
 
+            return Json(new { success = true, excelData });
         }
-
-        return View();
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = $"Error uploading file: {ex.Message}" });
+        }
     }
 }
-
