@@ -13,10 +13,16 @@
   <ItemGroup>
     <None Remove="uploads\" />
     <None Remove="ExcelUploads\" />
+    <None Remove="Scripts\" />
+    <None Remove="Scripts\jquery\" />
+    <None Remove="Scripts\data-table\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="uploads\" />
     <Folder Include="ExcelUploads\" />
+    <Folder Include="Scripts\" />
+    <Folder Include="Scripts\jquery\" />
+    <Folder Include="Scripts\data-table\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Docker.DotNet" Version="3.125.15" />

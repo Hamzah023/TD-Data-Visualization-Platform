@@ -1,63 +1,93 @@
-﻿<div class="text-center">
-    <h1 class="display-4">Upload an Excel File</h1>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <div class="form-group">
-            <input type="file" name="file" id="fileInput" class="form-control" />
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTables Example</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+</head>
+<body>
+        <div class="text-center">
+            <h1 class="display-4">Upload an Excel File</h1>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="file" id="fileInput" class="form-control" />
+                </div>
+                <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
+            </form>
+
+            <table class="table" id="excelTable">
+                <thead>
+                    <tr id="tableHeader"></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
         </div>
-        <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
-    </form>
 
-    <table class="table" id="excelTable">
-        <thead>
-            <tr id="tableHeader"></tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#uploadButton').click(function () {
-            var formData = new FormData();
-            var file = $('#fileInput')[0].files[0];
-            formData.append('file', file);
 
-            $.ajax({
-                url: '@Url.Action("ExcelFileReader", "Home")',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data.success) {
-                        $('#tableHeader').empty();
-                        $('#tableBody').empty();
+        <script>
+        $(document).ready(function () { //enclosed code runs only after HTML doc completely loaded
+            $('#uploadButton').click(function () { //when click event handler uploadButton clicked func executes
+                var formData = new FormData(); //new formdata object that will send file async to server
+                var file = $('#fileInput')[0].files[0]; //retrieves first file selected in file input
+                formData.append('file', file); //append file to formdata object with key 'file'
 
-                        if (data.excelData && data.excelData.length > 0) {
-                            var headers = data.excelData[0];
-                            for (var i = 0; i < headers.length; i++) {
-                                $('#tableHeader').append('<th>' + headers[i] + '</th>');
-                            }
+                $.ajax({ //ajax request to server
+                    url: '@Url.Action("ExcelFileReader", "Home")', //specifies server side action in homecontrolle where file processed
+                    type: 'POST',
+                    data: formData, //sends FormData object containing file to server
+                    contentType: false, //allows FormData to process data
+                    processData: false, //allows FormData to set content type
+                    success: function (data) { // callback function that executes if success
+                        if (data.success) { // check if server response indicates success
+                            $('#tableHeader').empty(); //empty table header content
+                            $('#tableBody').empty(); //empty table body content
 
-                            for (var i = 1; i < data.excelData.length; i++) {
-                                var row = '<tr>';
-                                for (var j = 0; j < data.excelData[i].length; j++) {
-                                    row += '<td>' + data.excelData[i][j] + '</td>';
+                            if (data.excelData != null && data.excelData.length > 0) { //checks if file has excel data.
+                                var headers = data.excelData[0]; // retrieves headers first row
+
+                                for (var i = 0; i < headers.length; i++) {
+                                    $('#tableHeader').append('<th>' + headers[i] + '</th>'); //iterates through headers to create <th> elements (table header cells)
                                 }
-                                row += '</tr>';
-                                $('#tableBody').append(row);
+
+                                for (var i = 1; i < data.excelData.length; i++) { //iterates through excel data in file to create rows in table body
+                                    var row = '<tr>'; //start building a new table row
+
+                                    for (var j = 0; j < data.excelData[i].length; j++) { //loop thru each cell in current row
+                                        row += '<td>' + data.excelData[i][j] + '</td>'; //add table cell td with content from excel file
+                                    }
+                                    row += '</tr>'; //complete row table
+                                    $('#tableBody').append(row); //append completed row to the table body element
+                                }
                             }
+
+                            $('#excelTable').DataTable({
+                                "pageLength": 20,
+                                "searching": true,
+                                "paging": true,
+                                "info": true
+                            });
+                           
+
+
+                        } else {
+
+                            alert(data.message);
                         }
-                    } else {
-                        alert(data.message);
+                    },
+
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                        alert('An error occurred while uploading the file.');
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                    alert('An error occurred while uploading the file.');
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
+</body>
+</html>
