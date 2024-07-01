@@ -11,26 +11,26 @@
 
 </head>
 <body>
-        <div class="text-center">
-            <h1 class="display-4">Upload an Excel File</h1>
-            <form id="uploadForm" enctype="multipart/form-data">
-                <div class="form-group">
-                    <input type="file" name="file" id="fileInput" class="form-control" />
-                </div>
-                <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
-            </form>
+    <div class="text-center">
+        <h1 class="display-4">Upload an Excel File</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="file" id="fileInput" class="form-control" />
+            </div>
+            <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
+        </form>
 
-            <table class="table" id="excelTable">
-                <thead>
-                    <tr id="tableHeader"></tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </div>
+        <table class="table" id="excelTable">
+            <thead>
+                <tr id="tableHeader"></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 
 
 
-        <script>
+    <script>
         $(document).ready(function () { //enclosed code runs only after HTML doc completely loaded
             $('#uploadButton').click(function () { //when click event handler uploadButton clicked func executes
                 var formData = new FormData(); //new formdata object that will send file async to server
@@ -72,7 +72,7 @@
                                 "paging": true,
                                 "info": true
                             });
-                           
+
 
 
                         } else {

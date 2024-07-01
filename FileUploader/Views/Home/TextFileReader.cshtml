@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Text File Readerkjjk";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Upload a Text File</h1>
+    <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="UploadFile">
+        <div class="form-group">
+            <input type="file" name="file" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+
+
+    @if (ViewData["Message"] != null)
+    {
+        <div class="alert alert-info">
+            @ViewData["Message"]
+        </div>
+
+    }
+
+    @if (ViewData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-info">
+            @ViewData["SuccessMessage"]
+        </div>
+
+    }
+
+    @if (ViewData["FileContents"] != null)
+    {
+        <hr />
+        <h2>Uploaded File:</h2>
+        <hr />
+        <h3>File Contents:</h3>
+        <pre>@Html.Raw(ViewData["FileContents"].ToString())</pre>
+    }
+
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-info">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
+
+</div>

@@ -36,13 +36,18 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult TextFileReader()
+    {
+        return View();
+    }
+
     [HttpPost]
     public async Task<IActionResult> UploadFile(IFormFile file)
     {
         if (file == null || file.Length == 0)
         {
             ViewData["Message"] = "Please select a file to upload";
-            return View("Index");
+            return View("TextFileReader");
         }
 
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", file.FileName);
@@ -61,13 +66,13 @@ public class HomeController : Controller
             ViewData["SuccessMessage"] = "File uploaded successfully!";
             ViewData["FileContents"] = fileContents;
 
-            return View("Index");
+            return View("TextFileReader");
         }
         catch (Exception ex)
         {
             ViewData["Error" +
                 "Message"] = $"Error uploading file: {ex.Message}";
-            return View("Index");
+            return View("TextFileReader");
         }
     }
 
