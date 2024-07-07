@@ -23,6 +23,7 @@
     <Folder Include="Scripts\" />
     <Folder Include="Scripts\jquery\" />
     <Folder Include="Scripts\data-table\" />
+    <Folder Include="Views\Form\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Docker.DotNet" Version="3.125.15" />
