@@ -8,9 +8,12 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('/FormController/Login', { username, password });
-      // Handle successful login (e.g., redirect to another page or update UI)
-      console.log(response.data);
+        const response = await axios.post('/FormController/Login', { username, password });
+        console.log(response.data);
+        window.location.replace('/') //redirect to home page
+
+
+
     } catch (error) {
       // Handle login error (e.g., show error message)
       console.error('Error logging in', error);

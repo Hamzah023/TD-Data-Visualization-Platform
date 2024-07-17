@@ -38,8 +38,7 @@ namespace FileUploader.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewData["Error"] = "Invalid username or password";
-            return View();
+            return BadRequest(new { message = "Invalid username or password" });
         }
     }
 }
