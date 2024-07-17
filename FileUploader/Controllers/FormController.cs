@@ -18,7 +18,8 @@ namespace FileUploader.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return View();
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
+            return PhysicalFile(filePath, "text/html");
         }
 
         [HttpPost]

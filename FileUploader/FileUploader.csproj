@@ -23,6 +23,7 @@
     <Folder Include="Scripts\" />
     <Folder Include="Scripts\jquery\" />
     <Folder Include="Scripts\data-table\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Docker.DotNet" Version="3.125.15" />
@@ -34,5 +35,8 @@
     <PackageReference Include="jquery.datatables" Version="1.10.15" />
     <PackageReference Include="ExcelDataReader" Version="3.7.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\" />
   </ItemGroup>
 </Project>
