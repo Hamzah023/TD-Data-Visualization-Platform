@@ -34,7 +34,7 @@
         <h2>Uploaded File:</h2>
         <hr />
         <h3>File Contents:</h3>
-        <pre>@Html.Raw(ViewData["FileContents"].ToString())</pre>
+        <pre>@Html.Raw(ViewData["FileContents"]?.ToString() ?? "Content not available")</pre>
     }
 
     @if (ViewData["ErrorMessage"] != null)
