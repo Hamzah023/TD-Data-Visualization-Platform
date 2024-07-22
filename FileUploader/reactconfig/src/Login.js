@@ -1,20 +1,37 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const Login = () => {
+  console.log("the Login component is rendered");
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-        const response = await axios.post('/Form/Login', { username, password });
-        console.log(response.data);
-        window.location.replace('/Home/Index') //redirect to home page
 
+    console.log("the handleSubmit function is called when the form is submitted");
+    try {
+        const response = await axios.post('https://localhost:7001/Form/Login2', { username, password });
+        console.log(response);
+        if (response.status === 200) {
+            window.location.href = response.data.redirectUrl;
+        }
+  
     } catch (error) {
       // Handle login error (e.g., show error message)
-      console.error('Error logging in', error);
+      if (axios.isAxiosError(error)) {
+        let errorMessage = 'Login failed brudda\n';
+
+        if (error.response) {
+          console.error(errorMessage, error.response.data);
+        }
+        else if (error.request) {
+          console.error(errorMessage, 'No response received but requesr made \n');
+        }
+        else {
+          console.error('Error logging in', error);
+        }
+      }
     }
   };
 

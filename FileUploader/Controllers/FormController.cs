@@ -12,20 +12,26 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FileUploader.Controllers
 {
+    [ApiController] //what does this do? it is a decorator that tells the compiler that this class is an API controller, an API controller is a class that derives from ControllerBase and is used to handle web API requests
+    [Route("Form")]
     public class FormController : Controller
     {
         // GET: /<controller>/
         [HttpGet]
+        [Route("Login")]
         public IActionResult Login()
         {
+            Console.WriteLine("THIS IS A SIGN OH MY GOD");
+            Console.WriteLine("get request sent");
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
             return PhysicalFile(filePath, "text/html");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string username, string password)
+        [Route("Form/Login2")]
+        public async Task<IActionResult> Login2(string username, string password)
         {
-
+            Console.WriteLine("post request sent");
             if (username != null && password != null)
             {
                 var claims = new List<Claim>
@@ -35,8 +41,8 @@ namespace FileUploader.Controllers
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                return RedirectToAction("Index", "Home");
+                Console.WriteLine("post request sent and configured");
+                return Ok(new { redirectUrl = Url.Action("Index", "Home") });
             }
 
             return BadRequest(new { message = "Invalid username or password" });

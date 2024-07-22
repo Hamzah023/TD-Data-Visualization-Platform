@@ -8,8 +8,8 @@ function App() {
         <BrowserRouter>
             <div className="App">
                 <Routes>
-                    <Route path="/" element={<Navigate to="/login" replace />} />
-                    <Route path="/login" element={<Login/>} />
+                    <Route path="/" element={<Navigate to="Form/Login" replace />} />
+                    <Route path="Form/Login" element={<Login/>} />
                 </Routes>
             </div>
         </BrowserRouter>
