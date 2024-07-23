@@ -1,11 +1,21 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 
+// Add services to the container.
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
+app.UseCors("AllowAnyOrigin");
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -16,7 +26,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",

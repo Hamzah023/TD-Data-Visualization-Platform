@@ -4,7 +4,7 @@ export class FetchData extends Component {
   static displayName = FetchData.name;
 
   constructor(props) {
-    super(props);
+    super(props); // This is the constructor of the class, which is called when the class is instantiated. The super() method is used to call the constructor of the parent class. In this case, the parent class is Component, so super(props) calls the constructor of the Component class.
     this.state = { forecasts: [], loading: true };
   }
 
